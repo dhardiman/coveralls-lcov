@@ -13,9 +13,12 @@ module Coveralls
         lcov_info.each do |filename, info|
           source_files << generate_source_file(filename, info)
         end
+        running_on_circle = ENV["CIRCLECI"]
+        service_name = running_on_circle ? "circle-ci" : "travis-ci"
+        service_job_id = running_on_circle ? ENV["CIRCLE_BUILD_NUM"] : ENV["TRAVIS_JOB_ID"]
         payload = {
-          :service_name   => "travis-ci",
-          :service_job_id => ENV["TRAVIS_JOB_ID"],
+          :service_name   => service_name,
+          :service_job_id => service_job_id,
           :git            => git_info,
           :source_files   => source_files,
         }
